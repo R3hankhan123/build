@@ -22,7 +22,32 @@ jobs:
         ubi:
           - ubi9
           - ubi10
-      max-parallel: 1
+        include:
+          - image: base
+            ubi: ubi10
+            dockerfile: Dockerfile.ubi10
+          - image: image-processing
+            ubi: ubi10
+            dockerfile: Dockerfile.ubi10
+          - image: base
+            ubi: ubi9
+            dockerfile: Dockerfile
+          - image: image-processing
+            ubi: ubi9
+            dockerfile: Dockerfile
+          - image: git
+            ubi: ubi9
+            dockerfile: Dockerfile
+          - image: git
+            ubi: ubi10
+            dockerfile: Dockerfile
+          - image: waiter
+            ubi: ubi9
+            dockerfile: Dockerfile
+          - image: waiter
+            ubi: ubi10
+            dockerfile: Dockerfile
+      max-parallel: 2
 
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +68,6 @@ jobs:
         run: |
           IMAGE=${{ matrix.image }} \
           UBI=${{ matrix.ubi }} \
-          IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} \
           NAMESPACE="shipwright-io" \
-          docker buildx bake --push -f ../docker-bake.hcl --set all.args.IMAGE=${{ matrix.image }} --set all.args.UBI=${{ matrix.ubi }} --set all.args.NAMESPACE=${NAMESPACE}
+          DOCKERFILE=${{ matrix.dockerfile }} \
+          docker buildx bake --push -f ../docker-bake.hcl --set all.args.IMAGE=${{ matrix.image }} --set all.args.UBI=${{ matrix.ubi }} --set all.args.NAMESPACE=${NAMESPACE} --set all.args.DOCKERFILE=${{ matrix.dockerfile }}
