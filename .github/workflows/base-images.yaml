@@ -44,5 +44,5 @@ jobs:
           IMAGE=${{ matrix.image }} \
           UBI=${{ matrix.ubi }} \
           IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} \
-          NAMESPACE= "shipwright-io"\
+          NAMESPACE="shipwright-io" \
           docker buildx bake --push -f ../docker-bake.hcl --set all.args.IMAGE=${{ matrix.image }} --set all.args.UBI=${{ matrix.ubi }} --set all.args.NAMESPACE=${NAMESPACE}
