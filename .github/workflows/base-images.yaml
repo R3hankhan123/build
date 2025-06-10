@@ -4,10 +4,12 @@ on:
   schedule:
   - cron: '0 3 * * *' # 3 AM UTC = before the nightly build
   workflow_dispatch:  # Manual trigger
+  push:
+    branches: [test]
 
 jobs:
   base-image-build:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.repository == 'shipwright-io/build' }}
+    if: ${{ github.ref == 'refs/heads/test' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -17,7 +19,9 @@ jobs:
           - git
           - image-processing
           - waiter
-      # We cannot run in parallel because the base image must be built first
+        ubi:
+          - ubi9
+          - ubi10
       max-parallel: 1
 
     steps:
@@ -32,10 +36,13 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login to container registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.repository_owner }} --password-stdin ghcr.io
+        run: echo ${{ secrets.QUAY_PASSWORD }} | docker login -u ${{ secrets.QUAY_USERNAME }} --password-stdin quay.io
 
       - name: Build Image
         working-directory: images/${{ matrix.image }}
         run: |
-          NAMESPACE=$(tr '[:upper:]' '[:lower:]' <<<${{ github.repository_owner }})
-          IMAGE=ghcr.io/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
+          IMAGE=${{ matrix.image }} \
+          UBI=${{ matrix.ubi }} \
+          IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} \
+          NAMESPACE= "shipwright-io"\
+          docker buildx bake --push -f ../docker-bake.hcl --set all.args.IMAGE=${{ matrix.image }} --set all.args.UBI=${{ matrix.ubi }} --set all.args.NAMESPACE=${NAMESPACE}
