@@ -7,8 +7,10 @@ ARG BASE
 FROM ${BASE}
 
 RUN \
-  microdnf --assumeyes --nodocs install git git-lfs && \
+  microdnf --assumeyes --nodocs --disableplugin=subscription-manager install git curl gnupg ca-certificates && \
+  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
+  microdnf --assumeyes --nodocs install git-lfs && \
   microdnf clean all && \
-  rm -rf /var/cache/yum
+  rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
 
 USER 1000:1000
