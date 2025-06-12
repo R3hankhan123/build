@@ -5,7 +5,8 @@
 ARG BASE
 
 FROM ${BASE}
-
+RUN ls /etc/pki/rpm-gpg/
+RUN microdnf install gpg gpgme
 RUN \
   microdnf clean all && \
   microdnf --assumeyes --nodocs install git curl gnupg ca-certificates && \
