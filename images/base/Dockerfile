@@ -4,6 +4,7 @@
 FROM registry.access.redhat.com/ubi9-minimal:latest
 
 RUN \
+  rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release && \
   microdnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade && \
   microdnf clean all && \
   rm -rf /var/cache/yum && \
