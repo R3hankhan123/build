@@ -6,24 +6,20 @@ ARG BASE
 
 FROM ${BASE}
 
-RUN dnf install -y --nodocs git curl && \
-    ARCH=$(uname -m | sed \
-        -e 's/^x86_64$/linux-amd64/' \
-        -e 's/^aarch64$/linux-arm64/' \
-        -e 's/^ppc64le$/linux-ppc64le/' \
-        -e 's/^s390x$/linux-s390x/') && \
-    GIT_LFS_VER="3.5.1" && \
-    # piped tar with correct URL
-    curl -sL "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/git-lfs-${ARCH}-v${GIT_LFS_VER}.tar.gz" \
-      | tar xz && \
-    # cd into the directory *with* -v prefix
-    cd git-lfs-${ARCH}-v${GIT_LFS_VER} && \
-    ./install.sh && \
-    cd .. && rm -rf git-lfs-${ARCH}-v${GIT_LFS_VER} && \
-    git lfs install && \
-    dnf clean all && \
-    rm -rf /var/cache/dnf /var/cache/yum /var/tmp/*
-
-
+RUN \
+  microdnf --assumeyes --nodocs install git curl gnupg ca-certificates && \
+  ARCH=$(uname -m) && \
+  case "$ARCH" in \
+    x86_64)   LFS_ARCH=amd64 ;; \
+    aarch64)  LFS_ARCH=arm64 ;; \
+    ppc64le)  LFS_ARCH=ppc64le ;; \
+    s390x)    LFS_ARCH=s390x ;; \
+    *)        echo "Unsupported architecture: $ARCH"; exit 1 ;; \
+  esac && \
+  curl -L -o /tmp/git-lfs.rpm https://github.com/git-lfs/git-lfs/releases/download/v3.6.0/git-lfs-linux-${LFS_ARCH}-v3.6.0.rpm && \
+  rpm -i /tmp/git-lfs.rpm && \
+  rm -f /tmp/git-lfs.rpm && \
+  microdnf clean all && \
+  rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
 
 USER 1000:1000
