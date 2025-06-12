@@ -13,13 +13,12 @@ RUN dnf install -y --nodocs git curl && \
         -e 's/^ppc64le$/linux-ppc64le/' \
         -e 's/^s390x$/linux-s390x/') && \
     GIT_LFS_VER="3.5.1" && \
-    # Download and unpack into a named folder
+    # piped tar with correct URL
     curl -sL "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/git-lfs-${ARCH}-v${GIT_LFS_VER}.tar.gz" \
       | tar xz && \
-    # Enter the extracted directory and run its installer
+    # cd into the directory *with* -v prefix
     cd git-lfs-${ARCH}-v${GIT_LFS_VER} && \
     ./install.sh && \
-    # Cleanup extracted folder
     cd .. && rm -rf git-lfs-${ARCH}-v${GIT_LFS_VER} && \
     git lfs install && \
     dnf clean all && \
