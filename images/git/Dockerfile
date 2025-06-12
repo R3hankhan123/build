@@ -14,7 +14,7 @@ RUN update-crypto-policies --set LEGACY
 
 # Step 3: Add Git LFS repository
 # (Using the explicit OS/distro for packagecloud.io)
-RUN curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh?os=el&dist=10 | bash
+RUN curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash
 
 # Step 4: Install git-lfs
 RUN dnf --assumeyes --nodocs install git-lfs
