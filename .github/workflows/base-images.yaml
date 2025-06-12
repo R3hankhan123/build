@@ -66,8 +66,5 @@ jobs:
       - name: Build Image
         working-directory: images/${{ matrix.image }}
         run: |
-          IMAGE=quay.io/r3hankhan/${{ matrix.image }} \
-          UBI=${{ matrix.ubi }} \
           NAMESPACE="shipwright-io" \
-          DOCKERFILE=${{ matrix.dockerfile }} \
-          docker buildx bake --push -f ../docker-bake.hcl --set all.args.IMAGE=${{ matrix.image }} --set all.args.UBI=${{ matrix.ubi }} --set all.args.NAMESPACE=${NAMESPACE} --set all.args.DOCKERFILE=${{ matrix.dockerfile }}
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" UBI="${{ matrix.ubi }}" DOCKERFILE="${{matrix.dockerfile}}" docker buildx bake --push -f ../docker-bake.hcl
