@@ -6,8 +6,8 @@ ARG BASE
 
 FROM ${BASE}
 RUN \
-  microdnf --assumeyes --nodocs install git git-lfs && \
-  microdnf clean all && \
+  dnf --assumeyes --nodocs install git git-lfs && \
+  dnf clean all && \
   rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
 
 USER 1000:1000
