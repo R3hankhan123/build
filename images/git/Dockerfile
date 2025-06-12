@@ -6,20 +6,26 @@ ARG BASE
 
 FROM ${BASE}
 
-RUN \
-  dnf --assumeyes --nodocs install git curl gnupg ca-certificates && \
-  ARCH=$(uname -m) && \
-  case "$ARCH" in \
-    x86_64)   LFS_ARCH=amd64 ;; \
-    aarch64)  LFS_ARCH=arm64 ;; \
-    ppc64le)  LFS_ARCH=ppc64le ;; \
-    s390x)    LFS_ARCH=s390x ;; \
-    *)        echo "Unsupported architecture: $ARCH"; exit 1 ;; \
-  esac && \
-  curl -L -o /tmp/git-lfs.rpm https://github.com/git-lfs/git-lfs/releases/download/v3.6.0/git-lfs-linux-${LFS_ARCH}-v3.6.0.rpm && \
-  rpm -i /tmp/git-lfs.rpm && \
-  rm -f /tmp/git-lfs.rpm && \
-  dnf clean all && \
-  rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
+RUN dnf install -y --nodocs git curl && \
+    # Map uname -m to Git LFS archive naming
+    LFS_ARCH=$(uname -m | sed \
+      -e 's/^x86_64$/linux-amd64/' \
+      -e 's/^aarch64$/linux-arm64/' \
+      -e 's/^ppc64le$/linux-ppc64le/' \
+      -e 's/^s390x$/linux-s390x/' || \
+      (echo "Unsupported arch $(uname -m)" >&2; exit 1)) && \
+    GIT_LFS_VER="3.6.0" && \
+    # Download the tarball to /tmp, extract into /tmp, keeping the directory structure
+    curl -L -o /tmp/git-lfs.tar.gz \
+      "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/git-lfs-${LFS_ARCH}-v${GIT_LFS_VER}.tar.gz" && \
+    tar -xzf /tmp/git-lfs.tar.gz -C /tmp && \
+    # Run the installer from the extracted folder
+    cd /tmp/git-lfs-${GIT_LFS_VER} && \
+    ./install.sh && \
+    # Perform global Git LFS setup
+    git lfs install && \
+    # Cleanup temporary files
+    rm -rf /tmp/git-lfs.tar.gz /tmp/git-lfs-${GIT_LFS_VER} && \
+    dnf clean all && rm -rf /var/cache/dnf /var/cache/yum /var/tmp/*
 
 USER 1000:1000
