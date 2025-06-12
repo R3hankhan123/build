@@ -8,7 +8,7 @@ FROM ${BASE}
 
 RUN dnf --assumeyes --nodocs install git curl && \
     curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
-    dnf --assumeyes --nodocs install git-lfs && \
+    dnf --assumeyes --nodocs --nogpgcheck  install git-lfs && \
     git lfs install && \
     dnf clean all && \
     rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
