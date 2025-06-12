@@ -1,7 +1,7 @@
 # Copyright The Shipwright Contributors
 #
 # SPDX-License-Identifier: Apache-2.0
-FROM registry.redhat.io/ubi10-minimal:10.0-1747219969
+FROM registry.access.redhat.com/ubi10-minimal:10.0-1747219969
 
 RUN \
   microdnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade; \
