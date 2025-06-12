@@ -5,13 +5,8 @@
 ARG BASE
 
 FROM ${BASE}
-RUN ls /etc/pki/rpm-gpg/
-RUN microdnf install gpg gpgme
 RUN \
-  microdnf clean all && \
-  microdnf --assumeyes --nodocs install git curl gnupg ca-certificates && \
-  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
-  microdnf --assumeyes --nodocs install git-lfs && \
+  microdnf --assumeyes --nodocs install git git-lfs && \
   microdnf clean all && \
   rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
 
