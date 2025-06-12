@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ARG BASE
 
-FROM registry.access.redhat.com/ubi10-beta/ubi-minimal:10.0-beta-1741684127 AS bin-loader
+FROM registry.access.redhat.com/ubi10-minimal:10.0-1747219969 AS bin-loader
 RUN \
   microdnf --assumeyes --nodocs install gzip jq tar && \
   TAG_NAME="$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | jq -r '.tag_name')" && \
