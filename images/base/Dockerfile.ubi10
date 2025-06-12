@@ -1,11 +1,10 @@
 # Copyright The Shipwright Contributors
 #
 # SPDX-License-Identifier: Apache-2.0
-FROM registry.access.redhat.com/ubi10-beta/ubi-minimal:10.0-beta-1741684127
+FROM registry.redhat.io/ubi10-minimal:10.0-1747219969
 
 RUN \
-    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release || true \
-    microdnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade; \
+  microdnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade; \
   microdnf clean all && \
   rm -rf /var/cache/yum && \
   # The following setup is necessary so that this image can run as any user
