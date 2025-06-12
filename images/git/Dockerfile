@@ -6,29 +6,21 @@ ARG BASE
 
 FROM ${BASE}
 
-RUN dnf --assumeyes --nodocs install git curl
-
-# Step 2: Set crypto policy to LEGACY
-# WARNING: This lowers your system's security.
-RUN update-crypto-policies --set LEGACY
-
-# Step 3: Add Git LFS repository
-# (Using the explicit OS/distro for packagecloud.io)
-RUN curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash
-
-# Step 4: Install git-lfs
-RUN dnf --assumeyes --nodocs install git-lfs
-
-# Step 5: Initialize Git LFS
-# This command needs 'git' to be installed and accessible.
-RUN git lfs install
-
-# Step 6: Restore crypto policy to DEFAULT (optional but recommended)
-RUN update-crypto-policies --set DEFAULT
-
-# Step 7: Clean up DNF cache and temporary files
-RUN dnf clean all && \
-    rm -rf /var/cache/yum /var/cache/dnf /var/tmp/*
+RUN dnf install -y --nodocs git curl && \
+    ARCH=$(uname -m | sed \
+        -e 's/^x86_64$/linux-amd64/' \
+        -e 's/^aarch64$/linux-arm64/' \
+        -e 's/^ppc64le$/linux-ppc64le/' \
+        -e 's/^s390x$/linux-s390x/') && \
+    echo "Detected ARCH: $ARCH" && \
+    GIT_LFS_VER="3.5.1" && \
+    curl -sL "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/git-lfs-${ARCH}-v${GIT_LFS_VER}.tar.gz" \
+      | tar xz && \
+    ./install.sh && \
+    git lfs install && \
+    rm -rf git-lfs-*-*/ && \
+    dnf clean all && \
+    rm -rf /var/cache/dnf /var/cache/yum /var/tmp/*
 
 
 USER 1000:1000
