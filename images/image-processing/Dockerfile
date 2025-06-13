@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ARG BASE
-
-FROM registry.access.redhat.com/ubi10-minimal:10.0-1747219969 AS bin-loader
+ARG BUILD_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
+FROM ${BUILD_IMAGE} AS bin-loader
 RUN \
   microdnf clean all && \
   microdnf --assumeyes --nodocs install gzip jq tar && \

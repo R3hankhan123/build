@@ -19,6 +19,7 @@ jobs:
           - git
           - image-processing
           - waiter
+        ubi: [ubi9, ubi10] 
       max-parallel: 1
 
     steps:
@@ -38,21 +39,17 @@ jobs:
       - name: Build Image
         working-directory: images/${{ matrix.image }}
         run: |
-          NAMESPACE="shipwright-io" \
-          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
-
-      - name: Checkout release branch
-        uses: actions/checkout@v4
-        with:
-          ref: release-v0.16
-
-      - name: Update docker-bake.hcl for release
-        run: |
-          sed -i 's|ghcr.io/${NAMESPACE}/base-base|quay.io/r3hankhan/${NAMESPACE}/base-base:v0.16|' images/docker-bake.hcl
-          sed -i 's|\${IMAGE}:latest|\${IMAGE}:v0.16|' images/docker-bake.hcl
-
-      - name: Build and push the image with the release tag
-        working-directory: images/${{ matrix.image }}
-        run: |
-           NAMESPACE="shipwright-io" \
-           IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
+          if [[ "${{ matrix.ubi }}" == "ubi10" ]]; then
+            TAG="latest"
+            BUILD_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
+            DOCKERFILE="Dockerfile"
+          else
+            TAG="deprecated"
+            BUILD_IMAGE="registry.access.redhat.com/ubi9:9.6-1749542372"
+            if [[ "${{ matrix.image }}" == "git" ]]; then
+              DOCKERFILE="Dockerfile.ubi9"
+            else
+              DOCKERFILE="Dockerfile"
+            fi
+          fi
+          IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} TAG=$TAG BUILD_IMAGE=$BUILD_IMAGE DOCKERFILE=$DOCKERFILE docker buildx bake --push -f ../../docker-bake.hcl
