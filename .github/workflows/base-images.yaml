@@ -48,8 +48,8 @@ jobs:
 
       - name: Update docker-bake.hcl for release
         run: |
-          sed -i 's|ghcr.io/${NAMESPACE}/base-base|quay.io/r3hankhan/${NAMESPACE}/base-base:v0.16|' docker-bake.hcl
-          sed -i 's|\${IMAGE}:latest|\${IMAGE}:v0.16|' docker-bake.hcl
+          sed -i 's|ghcr.io/${NAMESPACE}/base-base|quay.io/r3hankhan/${NAMESPACE}/base-base:v0.16|' images/docker-bake.hcl
+          sed -i 's|\${IMAGE}:latest|\${IMAGE}:v0.16|' images/docker-bake.hcl
 
       - name: Build and push the image with the release tag
         working-directory: images/${{ matrix.image }}
