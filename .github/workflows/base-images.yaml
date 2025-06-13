@@ -50,7 +50,14 @@ jobs:
       - name: Build and push the image with the release tag
         working-directory: images/${{ matrix.image }}
         run: |
-          NAMESPACE="shipwright-io" \
-          TAG="v0.16" \
-          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" TAG="${TAG}s" docker buildx bake --push -f ../docker-bake.hcl --set all.args.tag=${TAG}
-        
+          # Define the base image repository name
+          IMAGE_REPO_NAME="quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }}"
+          # Define the desired tag
+          RELEASE_TAG="v0.16"
+
+          # Use docker buildx bake and pass the variables correctly
+          # The values set here will correspond to the variable "IMAGE" and "TAG" in your bake file
+          docker buildx bake --push \
+            -f ../docker-bake.hcl \
+            --set all.IMAGE=${IMAGE_REPO_NAME} \ # Pass the full repository name to bake file's IMAGE variable
+            --set all.TAG=${RELEASE_TAG}        # Pass the desired tag to bake file's TAG variable

@@ -13,7 +13,7 @@ group "default" {
 
 target "all" {
 	args = {
-		BASE = "quay.io/r3hankhan/shipwright-io/base-base:latest"
+		BASE = "quay.io/r3hankhan/shipwright-io/base-base:${TAG}"
 	}
 	tags = ["${IMAGE}:${TAG}"]
 	platforms = ["linux/amd64", "linux/arm64", "linux/ppc64le", "linux/s390x"]
