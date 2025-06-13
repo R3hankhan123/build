@@ -39,7 +39,8 @@ jobs:
         working-directory: images/${{ matrix.image }}
         run: |
           NAMESPACE="shipwright-io" \
-          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
+          TAG=latest \
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" TAG="$TAG" docker buildx bake --push -f ../docker-bake.hcl
 
       - name: Checkout release branch
         uses: actions/checkout@v4
@@ -48,8 +49,7 @@ jobs:
 
       - name: Build and push the image with the release tag
         working-directory: images/${{ matrix.image }}
-        env:
-          TAG: ${{ github.ref_name }}
         run: |
           NAMESPACE="shipwright-io" \
+          TAG: v0.16 \
           IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" TAG="$TAG" docker buildx bake --push -f ../docker-bake.hcl

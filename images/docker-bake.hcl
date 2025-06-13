@@ -5,7 +5,6 @@ variable "NAMESPACE" {
 }
 
 variable "TAG" {
-  default = "latest"
 }
 
 group "default" {
