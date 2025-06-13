@@ -40,16 +40,23 @@ jobs:
         working-directory: images/${{ matrix.image }}
         run: |
           if [[ "${{ matrix.ubi }}" == "ubi10" ]]; then
-            TAG="latest"
-            BUILD_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
-            DOCKERFILE="Dockerfile"
+          TAG="latest"
+          BUILD_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
+          DOCKERFILE="Dockerfile"
           else
-            TAG="deprecated"
-            BUILD_IMAGE="registry.access.redhat.com/ubi9:9.6-1749542372"
-            if [[ "${{ matrix.image }}" == "git" ]]; then
-              DOCKERFILE="Dockerfile.ubi9"
-            else
-              DOCKERFILE="Dockerfile"
+          TAG="deprecated"
+          BUILD_IMAGE="registry.access.redhat.com/ubi9:9.6-1749542372"
+          if [[ "${{ matrix.image }}" == "git" ]]; then
+            DOCKERFILE="Dockerfile.ubi9"
+          else
+            DOCKERFILE="Dockerfile"
             fi
           fi
-          IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} TAG=$TAG BUILD_IMAGE=$BUILD_IMAGE DOCKERFILE=$DOCKERFILE docker buildx bake --push -f ../docker-bake.hcl
+
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }}  \
+          TAG=$TAG \
+          BUILD_IMAGE=$BUILD_IMAGE \
+          DOCKERFILE=$DOCKERFILE \
+          docker buildx bake --push -f ../../docker-bake.hcl
+
+          

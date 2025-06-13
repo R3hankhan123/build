@@ -7,8 +7,8 @@ ARG BASE
 FROM ${BASE}
 
 RUN \
-  microdnf --assumeyes --nodocs install tar && \
-  microdnf clean all && \
+  dnf --assumeyes --nodocs install tar && \
+  dnf clean all && \
   rm -rf /var/cache/yum
 
 USER 1000:1000

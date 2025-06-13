@@ -1,8 +1,8 @@
 # Copyright The Shipwright Contributors
 #
 # SPDX-License-Identifier: Apache-2.0
-ARG BASE_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
-FROM ${BASE_IMAGE}
+ARG BUILD_IMAGE
+FROM ${BUILD_IMAGE}
 
 RUN \
   dnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade; \
