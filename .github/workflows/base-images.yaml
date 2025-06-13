@@ -57,6 +57,6 @@ jobs:
           TAG=$TAG \
           BUILD_IMAGE=$BUILD_IMAGE \
           DOCKERFILE=$DOCKERFILE \
-          docker buildx bake --push -f ../../docker-bake.hcl
+          docker buildx bake --push -f ../docker-bake.hcl
 
           
