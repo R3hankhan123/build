@@ -39,18 +39,20 @@ jobs:
         working-directory: images/${{ matrix.image }}
         run: |
           NAMESPACE="shipwright-io" \
-          TAG=latest \
-          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" TAG="${TAG}" docker buildx bake --push -f ../docker-bake.hcl
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
 
       - name: Checkout release branch
         uses: actions/checkout@v4
         with:
           ref: release-v0.16
 
+      - name: Update docker-bake.hcl for release
+        run: |
+          sed -i 's|ghcr.io/${NAMESPACE}/base-base|quay.io/r3hankhan/${NAMESPACE}/base-base:v0.16|' docker-bake.hcl
+          sed -i 's|\${IMAGE}:latest|\${IMAGE}:v0.16|' docker-bake.hcl
+
       - name: Build and push the image with the release tag
         working-directory: images/${{ matrix.image }}
         run: |
-          IMAGE_REPO_NAME="quay.io/***/shipwright-io/base-${{ matrix.image }}"
-          RELEASE_TAG="v0.16"
-          IMAGE="${IMAGE_REPO_NAME}" TAG="${RELEASE_TAG}" docker buildx bake --push \
-            -f ../docker-bake.hcl
+           NAMESPACE="shipwright-io" \
+           IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
