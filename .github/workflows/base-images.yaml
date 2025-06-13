@@ -52,4 +52,4 @@ jobs:
               DOCKERFILE="Dockerfile"
             fi
           fi
-          IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} TAG=$TAG BUILD_IMAGE=$BUILD_IMAGE DOCKERFILE=$DOCKERFILE docker buildx bake --push -f ../../docker-bake.hcl
+          IMAGE=quay.io/r3hankhan/shipwright-io/base-${{ matrix.image }} TAG=$TAG BUILD_IMAGE=$BUILD_IMAGE DOCKERFILE=$DOCKERFILE docker buildx bake --push -f ../docker-bake.hcl
