@@ -50,7 +50,7 @@ jobs:
       - name: Build and push the image with the release tag
         working-directory: images/${{ matrix.image }}
         run: |
-          NAMESPACE="shipwright-io"
-          TAG="v0.16"
-          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl \
-          --set all.TAG="${TAG}"
+          NAMESPACE="shipwright-io" \
+          TAG="v0.16" \
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" TAG="${TAG}" docker buildx bake --push -f ../docker-bake.hcl --set all.arg.tag=${TAG}
+        
