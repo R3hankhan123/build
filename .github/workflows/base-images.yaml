@@ -54,5 +54,5 @@ jobs:
           RELEASE_TAG="v0.16"
           docker buildx bake --push \
             -f ../docker-bake.hcl \
-            --set all.IMAGE=${IMAGE_REPO_NAME} \
-            --set all.TAG=${RELEASE_TAG}
+            --set IMAGE=${IMAGE_REPO_NAME} \
+            --set TAG=${RELEASE_TAG}
