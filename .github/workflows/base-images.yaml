@@ -52,7 +52,7 @@ jobs:
             DOCKERFILE="Dockerfile"
             fi
           fi
-
+          NAMESPACE="shipwright-io" \
           IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }}  \
           TAG=$TAG \
           BUILD_IMAGE=$BUILD_IMAGE \
