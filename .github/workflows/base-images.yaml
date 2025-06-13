@@ -52,7 +52,5 @@ jobs:
         run: |
           NAMESPACE="shipwright-io"
           TAG="v0.16"
-          IMAGE="quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }}"
-          docker buildx bake --push -f ../docker-bake.hcl \
-          --set all.IMAGE="${IMAGE}" \
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl \
           --set all.TAG="${TAG}"
