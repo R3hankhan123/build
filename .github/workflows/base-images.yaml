@@ -19,35 +19,7 @@ jobs:
           - git
           - image-processing
           - waiter
-        ubi:
-          - ubi9
-          - ubi10
-        include:
-          - image: base
-            ubi: ubi10
-            dockerfile: Dockerfile.ubi10
-          - image: image-processing
-            ubi: ubi10
-            dockerfile: Dockerfile.ubi10
-          - image: base
-            ubi: ubi9
-            dockerfile: Dockerfile
-          - image: image-processing
-            ubi: ubi9
-            dockerfile: Dockerfile
-          - image: git
-            ubi: ubi9
-            dockerfile: Dockerfile
-          - image: git
-            ubi: ubi10
-            dockerfile: Dockerfile
-          - image: waiter
-            ubi: ubi9
-            dockerfile: Dockerfile
-          - image: waiter
-            ubi: ubi10
-            dockerfile: Dockerfile
-      max-parallel: 2
+      max-parallel: 1
 
     steps:
       - uses: actions/checkout@v4
@@ -67,4 +39,15 @@ jobs:
         working-directory: images/${{ matrix.image }}
         run: |
           NAMESPACE="shipwright-io" \
-          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" UBI="${{ matrix.ubi }}" DOCKERFILE="${{matrix.dockerfile}}" docker buildx bake --push -f ../docker-bake.hcl
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" docker buildx bake --push -f ../docker-bake.hcl
+
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Build and push the image with the release tag
+        working-directory: images/${{ matrix.image }}
+        run: |
+          NAMESPACE="shipwright-io" \
+          IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }} NAMESPACE="${NAMESPACE}" TAG="v0.16" docker buildx bake --push -f ../docker-bake.hcl --set *.tags=latest

@@ -4,10 +4,8 @@ variable "IMAGE" {
 variable "NAMESPACE" {
 }
 
-variable "UBI" {
-}
-
-variable "DOCKERFILE" {
+variable "TAG" {
+  default = "latest"
 }
 
 group "default" {
@@ -16,10 +14,9 @@ group "default" {
 
 target "all" {
 	args = {
-		BASE = "quay.io/r3hankhan/shipwright-io/base-base:${UBI}-latest"
+		BASE = "quay.io/r3hankhan/shipwright-io/base-base:latest"
 	}
-	dockerfile = DOCKERFILE
-	tags = ["${IMAGE}:${UBI}-latest"]
+	tags = ["${IMAGE}:${TAG}"]
 	platforms = ["linux/amd64", "linux/arm64", "linux/ppc64le", "linux/s390x"]
 }
 

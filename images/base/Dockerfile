@@ -1,11 +1,11 @@
 # Copyright The Shipwright Contributors
 #
 # SPDX-License-Identifier: Apache-2.0
-FROM registry.access.redhat.com/ubi9-minimal:latest
+FROM registry.access.redhat.com/ubi10:10.0-1747220028
 
 RUN \
-  microdnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade && \
-  microdnf clean all && \
+  dnf --refresh --assumeyes --best --nodocs --noplugins --setopt=install_weak_deps=0 upgrade; \
+  dnf clean all && \
   rm -rf /var/cache/yum && \
   # The following setup is necessary so that this image can run as any user
   mkdir -p /shared-home/.docker /shared-home/.ssh && chmod -R 0777 /shared-home && \
@@ -15,3 +15,4 @@ RUN \
   echo "shp:x:1000" >/etc/group
 
 ENV HOME /shared-home
+
