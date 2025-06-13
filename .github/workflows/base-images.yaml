@@ -55,4 +55,4 @@ jobs:
           IMAGE="quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }}"
           docker buildx bake --push -f ../docker-bake.hcl \
           --set all.IMAGE="${IMAGE}" \
-          --set all.TAG="${TAG}" --set all.NAMESPACE="${NAMESPACE}" 
+          --set all.TAG="${TAG}"
