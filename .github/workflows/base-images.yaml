@@ -46,7 +46,7 @@ jobs:
           else
           TAG="deprecated"
           BUILD_IMAGE="registry.access.redhat.com/ubi9:9.6-1749542372"
-          if [[ "${{ matrix.image }}" == "git" ]]; then
+          if [[ "${{ matrix.image }}" == "git" && "${{ matrix.ubi }}" == "ubi9 ]]; then
             DOCKERFILE="Dockerfile.ubi9"
           else
             DOCKERFILE="Dockerfile"
