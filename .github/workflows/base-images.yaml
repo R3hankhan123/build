@@ -23,22 +23,28 @@ jobs:
         include:
           - image: base
             ubi: ubi9
+            dockerfile: Dockerfile
+          - image: base
+            ubi: ubi10
+            dockerfile: Dockerfile
           - image: git
             ubi: ubi9
             dockerfile: Dockerfile.ubi9
-          - image: image-processing
-            ubi: ubi9
-          - image: waiter
-            ubi: ubi9
-          - image: base
-            ubi: ubi10
           - image: git
             ubi: ubi10
             dockerfile: Dockerfile
           - image: image-processing
+            ubi: ubi9
+            dockerfile: Dockerfile
+          - image: waiter
+            ubi: ubi9
+            dockerfile: Dockerfile
+          - image: image-processing
             ubi: ubi10
+            dockerfile: Dockerfile
           - image: waiter
             ubi: ubi10
+            dockerfile: Dockerfile
       max-parallel: 1
 
     steps:
@@ -61,16 +67,10 @@ jobs:
           if [[ "${{ matrix.ubi }}" == "ubi10" ]]; then
           TAG="ubi10"
           BUILD_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
-          DOCKERFILE="Dockerfile"
           else
           TAG="latest"
           BUILD_IMAGE="registry.access.redhat.com/ubi9:9.6-1749542372"
           fi
-
+          NAMESPACE="shipwright-io" \
           IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }}  \
-          TAG=$TAG \
-          BUILD_IMAGE=$BUILD_IMAGE \
-          DOCKERFILE=$DOCKERFILE \
-          docker buildx bake --push -f ../../docker-bake.hcl
-
-          
+          TAG=$TAG BUILD_IMAGE=$BUILD_IMAGE DOCKERFILE=${{matrix.dockerfile}} docker buildx bake --push -f ../docker-bake.hcl
