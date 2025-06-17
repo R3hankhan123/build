@@ -76,9 +76,6 @@ IMAGE_HOST ?= ghcr.io
 IMAGE_NAMESPACE ?= shipwright-io/build
 TAG ?= latest
 
-# UBI version argument for ko builds
-UBI_VERSION ?= 10
-KO_CONFIG ?= .ko.ubi$(UBI_VERSION).yaml
 
 # options for generating crds with controller-gen
 CONTROLLER_GEN="${GOBIN}/controller-gen"

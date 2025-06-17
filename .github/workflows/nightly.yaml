@@ -63,10 +63,7 @@ jobs:
       run: |
         for command in *
         do
-          for ubi in 9 10
-          do
-            crane copy "${IMAGE_HOST}/${IMAGE_NAMESPACE}/${command}:ubi${ubi}-nightly-${{ steps.date.outputs.date }}" "${IMAGE_HOST}/${IMAGE_NAMESPACE}/${command}:ubi${ubi}-latest"
-          done
+          crane copy "${IMAGE_HOST}/${IMAGE_NAMESPACE}/${command}:nightly-${{ steps.date.outputs.date }}" "${IMAGE_HOST}/${IMAGE_NAMESPACE}/${command}:ubi10"
         done
 
     - name: Sign released images
