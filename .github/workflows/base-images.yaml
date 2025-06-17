@@ -20,6 +20,25 @@ jobs:
           - image-processing
           - waiter
         ubi: [ubi9, ubi10] 
+        include:
+          - image: base
+            ubi: ubi9
+          - image: git
+            ubi: ubi9
+            dockerfile: Dockerfile.ubi9
+          - image: image-processing
+            ubi: ubi9
+          - image: waiter
+            ubi: ubi9
+          - image: base
+            ubi: ubi10
+          - image: git
+            ubi: ubi10
+            dockerfile: Dockerfile
+          - image: image-processing
+            ubi: ubi10
+          - image: waiter
+            ubi: ubi10
       max-parallel: 1
 
     steps:
@@ -40,17 +59,12 @@ jobs:
         working-directory: images/${{ matrix.image }}
         run: |
           if [[ "${{ matrix.ubi }}" == "ubi10" ]]; then
-          TAG="latest"
+          TAG="ubi10"
           BUILD_IMAGE="registry.access.redhat.com/ubi10:10.0-1747220028"
           DOCKERFILE="Dockerfile"
           else
-          TAG="deprecated"
+          TAG="latest"
           BUILD_IMAGE="registry.access.redhat.com/ubi9:9.6-1749542372"
-          if [[ "${{ matrix.image }}" == "git" && "${{ matrix.ubi }}" == "ubi9 ]]; then
-            DOCKERFILE="Dockerfile.ubi9"
-          else
-            DOCKERFILE="Dockerfile"
-            fi
           fi
 
           IMAGE=quay.io/r3hankhan/${NAMESPACE}/base-${{ matrix.image }}  \
