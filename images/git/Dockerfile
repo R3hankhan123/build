@@ -7,8 +7,8 @@ ARG BASE
 FROM ${BASE}
 
 RUN \
-    dnf install -y --nodocs git curl && \
-    # Map uname -m to Git LFS archive naming as its not available in dnf and microdnf
+    microdnf install -y --nodocs git curl && \
+    # Map uname -m to Git LFS archive naming as its not available in microdnf
     LFS_ARCH=$(uname -m | sed \
       -e 's/^x86_64$/linux-amd64/' \
       -e 's/^aarch64$/linux-arm64/' \
@@ -27,6 +27,6 @@ RUN \
     git lfs install && \
     # Cleanup temporary files
     rm -rf /tmp/git-lfs.tar.gz /tmp/git-lfs-${GIT_LFS_VER} && \
-    dnf clean all && rm -rf /var/cache/dnf /var/cache/yum /var/tmp/*
+    microdnf clean all && rm -rf /var/cache/microdnf /var/cache/yum /var/tmp/*
 
 USER 1000:1000
