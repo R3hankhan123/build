@@ -76,7 +76,6 @@ IMAGE_HOST ?= ghcr.io
 IMAGE_NAMESPACE ?= shipwright-io/build
 TAG ?= latest
 
-
 # options for generating crds with controller-gen
 CONTROLLER_GEN="${GOBIN}/controller-gen"
 
