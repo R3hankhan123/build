@@ -22,6 +22,7 @@ group "default" {
 target "all" {
 	args = {
 		BASE = "ghcr.io/${NAMESPACE}/base-base:${TAG}"
+		BUILD_IMAGE = "${BUILD_IMAGE}"
 	}
 	tags = ["${IMAGE}:${TAG}"]
 	dockerfile = "${DOCKERFILE}"
