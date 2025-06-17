@@ -21,6 +21,7 @@ target "all" {
 		BUILD_IMAGE= "${BUILD_IMAGE}"
 		BASE = "quay.io/r3hankhan/shipwright-io/base-base:${TAG}"
 	}
+	dockerfile = "${DOCKERFILE}"
 	tags = ["${IMAGE}:${TAG}"]
 	platforms = ["linux/amd64", "linux/arm64", "linux/ppc64le", "linux/s390x"]
 }
