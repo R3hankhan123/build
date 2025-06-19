@@ -15,7 +15,7 @@ RUN \
       -e 's/^ppc64le$/linux-ppc64le/' \
       -e 's/^s390x$/linux-s390x/' || \
       (echo "Unsupported arch $(uname -m)" >&2; exit 1)) && \
-    GIT_LFS_VER="3.6.0" && \
+    GIT_LFS_VER="3.6.1" && \
     # Download the tarball to /tmp, extract into /tmp, keeping the directory structure
     curl -L -o /tmp/git-lfs.tar.gz \
       "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/git-lfs-${LFS_ARCH}-v${GIT_LFS_VER}.tar.gz" && \
